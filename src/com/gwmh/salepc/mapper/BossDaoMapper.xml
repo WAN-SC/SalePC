@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gwmh.salepc.basedao.BossDao">
+	<resultMap type="Emp" id="emp">
+		<id column="eid" property="eid"/>
+		<result column="ename" property="ename"/>
+		<result column="epwd" property="epwd"/>
+		<result column="esex" property="esex"/>
+		<result column="eage" property="eage"/>
+		<result column="ejobDate" property="ejobDate"/>
+		<result column="eroleid" property="eroleid"/>
+		<result column="email" property="email"/>
+		<result column="estate" property="estate"/>
+	</resultMap>
+
+	
+	<select id="findBossInfo" parameterType="int" resultType="emp">
+		SELECT EID,ENAME,EPWD,ESEX,EAGE,EJOBDATE,EROLEID, EMAIL,ESTATE from EMP where eid = #{ eid }
+	</select>
+	
+	<select id="queryAllEmp"  resultType="emp" parameterType="emp">
+		SELECT EID,ENAME,EPWD,ESEX,EAGE,EJOBDATE,EROLEID, EMAIL,ESTATE from EMP
+		<where>
+			<if test=" ename != null and ename != '' " >AND ENAME LIKE '%'||#{ename}||'%' </if>
+			<if test="dateMin != null and dateMin != ''">AND EJOBDATE >= TO_DATE(#{dateMin},'yyyy-MM-dd') </if>
+			<if test="dateMax != null and dateMax != ''">AND EJOBDATE &lt;= TO_DATE(#{dateMax},'yyyy-MM-dd') </if>	
+			<if test=" estate != null and estate != ''">AND ESTATE = #{estate}</if>	
+		</where>
+	</select>
+	
+	<resultMap type="Information" id="information">
+		<id column="id" property="id"/>
+		<result column="cpu" property="cpu"/>
+		<result column="memory" property="memory"/>
+		<result column="harddisk" property="harddisk"/>
+		<result column="viewingscreen" property="viewingscreen"/>
+		<result column="displaycard" property="displaycard"/>
+		<result column="multimedia" property="multimedia"/>
+		<result column="network" property="network"/>
+		<result column="input" property="input"/>
+		<result column="power" property="power"/>
+		<result column="appearance" property="appearance"/>
+		<result column="rests" property="rests"/>
+		<result column="type" property="type"/>
+		<result column="frequency" property="frequency"/>
+		<result column="coresnumber" property="coresnumber"/>
+		<result column="capacity" property="capacity"/>
+		<result column="bit" property="bit"/>
+		<result column="cl" property="cl"/>
+		<result column="rev" property="rev"/>
+		<result column="mvideo" property="mvideo"/>
+		<result column="mhz" property="mhz"/>
+		<result column="c" property="c"/>
+		<result column="dimm" property="dimm"/>
+		<result column="lcd" property="lcd"/>
+		<result column="producttype" property="producttype"/>
+		<result column="screensize" property="screensize"/>
+		<result column="videointerface" property="videointerface"/>
+		<result column="price" property="price"/>
+		<result column="storeinventory" property="storeinventory"/>
+		<result column="rentinventory" property="rentinventory"/>
+		<result column="state" property="state"/>
+		<association property="comm" javaType="com.gwmh.salepc.bean.Comm">
+		  <id column="id" property="id"/>
+		<result column="c1" property="c1"/>
+		<result column="c2" property="c2"/>
+		<result column="c3" property="c3"/>
+		<result column="c4" property="c4"/>
+		<result column="value" property="value"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="Comm" id="comm">
+		<id column="id" property="id"/>
+		<result column="c1" property="c1"/>
+		<result column="c2" property="c2"/>
+		<result column="c3" property="c3"/>
+		<result column="c4" property="c4"/>
+		<result column="value" property="value"/>
+	</resultMap>
+	
+	<resultMap type="Deal" id="deal">
+		<result column="deid" property="deid"/>
+		<result column="dename" property="dename"/>
+		<result column="decommid" property="decommid"/>
+		<association property="dealinfo" javaType="com.gwmh.salepc.bean.Dealinfo">
+			<id column="did" property="did"/>
+		<result column="dnumber" property="dnumber"/>
+		<result column="dempid" property="dempid"/>
+		<result column="ddate" property="ddate"/>
+		<result column="dmoney" property="dmoney"/>
+		<result column="dmode" property="dmode"/>
+		<result column="dmessage" property="dmessage"/>
+		<result column="dclientname" property="dclientname"/>
+		<result column="dcommfrom" property="dcommfrom"/>
+		<association property="emp" javaType="com.gwmh.salepc.bean.Emp">
+			<id column="eid" property="eid"/>
+		<result column="ename" property="ename"/>
+		<result column="epwd" property="epwd"/>
+		<result column="esex" property="esex"/>
+		<result column="eage" property="eage"/>
+		<result column="ejobDate" property="ejobDate"/>
+		<result column="eroleId" property="eroleId"/>
+		<result column="email" property="email"/>
+		<result column="estate" property="estate"/>
+		</association>
+		</association>
+	</resultMap>
+	
+	<select id="findCommInfo"  resultType="com.gwmh.salepc.bean.DBCommInfo">
+		select c1 ,c2 ,c3 , c4 , value ,id  from comm where id > 1000
+	</select>
+	
+	<select id="findCommName"  parameterType="CommNumber"  resultType="String">
+		select value from comm where c1 = #{ c1 } and c2 = #{ c2 } and c3 = #{ c3 } and c4 = #{ c4 }
+	</select>
+	
+	
+	
+	<!-- 对员工的增删改查-->
+	<select id="get" parameterType="int" resultType="emp">
+		select EID,ENAME,EPWD,ESEX,EAGE,EJOBDATE,EROLEID, EMAIL,ESTATE from EMP where eid = #{id}
+	</select>
+		
+	
+
+	<insert id="add">
+		insert into emp (eid,ename,epwd,eroleId,esex,eage,ejobDate,email,estate) values (#{eid},#{ename},#{epwd},#{eroleId},#{esex,jdbcType=VARCHAR},#{eage,jdbcType=NUMERIC},#{ejobDate,jdbcType=DATE},#{email,jdbcType=VARCHAR},#{estate,jdbcType=VARCHAR})
+	</insert>
+	
+	
+	
+	<update id="updateEmp" parameterType="emp">
+		update emp set ename=#{ename},epwd=#{epwd},esex=#{esex,jdbcType=VARCHAR},eage=#{eage,jdbcType=NUMERIC},ejobDate=#{ejobDate,jdbcType=DATE},eroleId=#{eroleId},email=#{email,jdbcType=VARCHAR},estate=#{estate,jdbcType=VARCHAR} where eid=#{eid}
+	</update>
+	
+	
+	
+	<delete id="del" parameterType="int">
+		delete from emp where eid=#{eid}
+	</delete>
+	
+	
+	
+	<!-- 获取商品分类信息 -->
+	<select id="getComm" resultType="comm">
+		select c1,c2,c3,c4,value from comm
+	</select>
+	
+	<!-- 获取商品分类信息数量 -->
+	<select id="getCommNumber" resultType="int">
+		SELECT count (*) FROM comm where id>1000
+	</select>
+	
+	<!-- 获取对应型号的商品数量 -->
+	<select id="getTheCommNumber" resultType="int">
+		SELECT count (*) FROM comm where c1=#{c1} and c2=#{c2} and c3=#{c3}
+	</select>
+	
+	<!-- 添加商品分类信息 -->
+	<insert id="addComm" parameterType="comm">
+		insert into comm(c1,c2,c3,c4,value,id) values(#{c1},#{c2},#{c3},#{c4},#{value},#{id})
+	</insert>
+	
+	<!-- 获取所有成品机信息 -->
+	<select id="getFinisher" resultMap="information">
+		select i.id,c.c3,c.value,i.cpu,i.memory,i.harddisk,i.viewingscreen,i.displaycard,i.PRICE,i.STOREINVENTORY,i.RENTINVENTORY,i.STATE from comm c,information i where c.id=i.id and c.c1=10001
+	</select>
+	
+	<!-- 获取商品信息数量
+	<select id="getInformationNumber" resultType="int">
+		select count(*) from information
+	</select>
+	 -->
+	
+	<!-- 添加成品机信息 -->
+	<insert id="addFinisher" parameterType="information">
+		insert into information(ID,CPU,MEMORY,HARDDISK,VIEWINGSCREEN,DISPLAYCARD,MULTIMEDIA,NETWORK,INPUT,POWER,APPEARANCE,RESTS,PRICE,STOREINVENTORY,RENTINVENTORY,STATE)values(infor_seq.nextval,#{cpu},#{memory},#{harddisk},#{viewingscreen},#{displaycard},#{multimedia},#{network},#{input},#{power},#{appearance},#{rests},#{price},0,0,'上架')
+	</insert>
+	
+	<!-- 上架商品信息 -->
+	<update id="sjInformation" >
+		update information set  state='上架' where id=#{id}
+	</update>
+	
+	<!-- 下架商品信息 -->
+	<update id="xjInformation" >
+		update information set  state='下架' where id=#{id}
+	</update>
+	
+	<!-- 获取所有配件信息 -->
+	<select id="getAccessories" resultMap="information">
+		select i.id,c.c3,c.c4,i.DISPLAYCARD,i.TYPE,i.FREQUENCY,i.CORESNUMBER,i.CAPACITY,i.BIT,i.CL,i.REV,i.MVIDEO,i.C,i.DIMM,i.LCD,i.SCREENSIZE,i.VIDEOINTERFACE,i.PRICE,i.STOREINVENTORY,i.RENTINVENTORY,i.STATE from comm c,information i where c.id=i.id and c.c1=10002
+	</select>
+	
+	<!-- 添加配件信息 -->
+	<insert id="addAccessories" parameterType="information">
+		insert into information(ID,displaycard,type,frequency,coresnumber,capacity,bit,cl,rev,mvideo,c,dimm,lcd,screensize,videointerface,price,storeinventory,rentinventory,state)values(infor_seq.nextval,#{displaycard},#{type},#{frequency},#{coresnumber},#{capacity},#{bit},#{cl},#{rev},#{mvideo},#{c},#{dimm},#{lcd},#{screensize},#{videointerface},#{price},0,0,'上架')
+	</insert>
+	
+	<!-- 获取要修改的商品信息(成品机) -->
+	<select id="getF" resultMap="information">
+		select id,cpu,memory,harddisk,viewingscreen,displaycard,MULTIMEDIA,NETWORK,INPUT,POWER,APPEARANCE,RESTS,PRICE from information where id=#{id}
+	</select>
+	
+	<!-- 修改商品信息(成品机) -->
+	<update id="updateFinisher">
+		update information set CPU=#{cpu},MEMORY=#{memory},HARDDISK=#{harddisk},VIEWINGSCREEN=#{viewingscreen},DISPLAYCARD=#{displaycard},MULTIMEDIA=#{multimedia},NETWORK=#{network},INPUT=#{input},POWER=#{power},APPEARANCE=#{appearance},RESTS=#{rests},PRICE=#{price} where id=#{id}
+	</update>
+	
+	<!-- 获取要修改的商品信息(配件) -->
+	<select id="getA" resultMap="information">
+		select id,DISPLAYCARD,TYPE,FREQUENCY,CORESNUMBER,CAPACITY,BIT,CL,REV,MVIDEO,C,DIMM,LCD,SCREENSIZE,VIDEOINTERFACE,PRICE from information where id=#{id}
+	</select>
+	
+	<!-- 修改商品信息(配件) -->
+	<update id="updateAccessories">
+		update information set DISPLAYCARD=#{displaycard},TYPE=#{type},FREQUENCY=#{frequency},CORESNUMBER=#{coresnumber},CAPACITY=#{capacity},BIT=#{bit},CL=#{cl},REV=#{rev},MVIDEO=#{mvideo},C=#{c},DIMM=#{dimm},LCD=#{lcd},SCREENSIZE=#{screensize},VIDEOINTERFACE=#{videointerface},PRICE=#{price} where id=#{id}
+	</update>
+	
+	<!-- 获取所有商品销量 -->
+	<select id="getSales" resultMap="deal">
+		select b.did,a.DENAME,b.DNUMBER,b.DMONEY,b.DMODE,c.ENAME,b.DCLIENTNAME,b.DCOMMFROM,b.DDATE,b.DMESSAGE from DEAL a, DEALINFO b, EMP c where a.deid=b.did and b.dempid=c.eid
+	</select>
+	
+	<!-- 获取商品上下架信息 -->
+	<select id="getSxj" resultMap="information">
+		select i.id,c.c2,c.c3,c.value,i.price,i.STOREINVENTORY,i.RENTINVENTORY,i.STATE from comm c,information i where c.id=i.id
+	</select>
+	
+	<!-- 多条件查询商品分类信息 -->
+	<select id="queryComm" resultMap="comm">
+		select c1,c2,c3,c4,value from comm 
+		<where>
+			<if test="c2 != null and c2 != ''">c2=#{c2}</if>
+			<if test="c3 != null and c3 != ''">and c3=#{c3}</if>
+			<if test="value != null and value != ''">AND VALUE LIKE '%${value}%'</if>
+		</where>
+	</select>
+	
+	<!-- 多条件查询商品信息(成品机) -->
+	<select id="queryFinisher" resultMap="information">
+		SELECT INFORMATION.ID,COMM.C3,COMM.VALUE,INFORMATION.CPU,INFORMATION.MEMORY,INFORMATION.HARDDISK,INFORMATION.VIEWINGSCREEN,INFORMATION.DISPLAYCARD,INFORMATION.PRICE,INFORMATION.STOREINVENTORY,INFORMATION.RENTINVENTORY,INFORMATION.STATE 
+		FROM INFORMATION INNER JOIN COMM ON INFORMATION.ID = COMM.ID
+		<where>
+			<if test="comm.c3 != null and comm.c3 != ''"> AND COMM.C3 = #{comm.c3} </if>
+			<if test="comm.value != null and comm.value != ''"> AND COMM.VALUE LIKE '%${comm.value}%' </if>
+			<if test="cpu != null and cpu != ''"> AND INFORMATION.CPU LIKE '%${cpu}%' </if>
+			<if test="memory != null and memory != ''"> AND INFORMATION.MEMORY LIKE '%${memory}%' </if>
+		</where>
+	</select>
+	
+	<!-- 多条件查询商品信息(配件) -->
+	<select id="queryAccessories" resultMap="information">
+		SELECT INFORMATION.ID,COMM.C3,COMM.C4,INFORMATION.DISPLAYCARD,INFORMATION.TYPE,INFORMATION.FREQUENCY,INFORMATION.CORESNUMBER,INFORMATION.CAPACITY,INFORMATION.BIT,INFORMATION.CL,INFORMATION.REV,INFORMATION.MVIDEO,INFORMATION.C,INFORMATION.DIMM,INFORMATION.LCD,INFORMATION.SCREENSIZE,INFORMATION.VIDEOINTERFACE,INFORMATION.PRICE,INFORMATION.STOREINVENTORY,INFORMATION.RENTINVENTORY,INFORMATION.STATE 
+		FROM INFORMATION INNER JOIN COMM ON INFORMATION.ID = COMM.ID 
+		<where>
+			<if test="comm.c3 != null and comm.c3 != ''"> AND COMM.C3 = #{comm.c3} </if>
+			<if test="comm.c4 != null and comm.c4 != ''"> AND COMM.C4 = #{comm.c4} </if>
+			<if test="type != null and type != ''"> AND TYPE = #{type} </if>
+		</where>
+	</select>
+	
+	<!-- 多条件查询商品上下架 -->
+	<select id="querySxj" resultMap="information">
+		SELECT INFORMATION.ID,COMM.C2,COMM.C3,COMM.VALUE,INFORMATION.PRICE,INFORMATION.STOREINVENTORY,INFORMATION.RENTINVENTORY,INFORMATION.STATE
+		FROM INFORMATION INNER JOIN COMM ON INFORMATION.ID = COMM.ID 
+		<where>
+			<if test="comm.c2 != null and comm.c2 != ''"> AND COMM.C2 = #{comm.c2} </if>
+			<if test="comm.c3 != null and comm.c3 != ''"> AND COMM.C3 = #{comm.c3} </if>
+			<if test="comm.value != null and comm.value != ''"> AND COMM.VALUE LIKE '%${comm.value}%' </if>
+			<if test="state != null and state != ''"> AND INFORMATION.STATE = #{state} </if>
+		</where>
+	</select>
+	
+</mapper>

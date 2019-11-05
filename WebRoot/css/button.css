@@ -1,0 +1,31 @@
+.bigbutton{
+	width: 110px ;height: 45px ; background-color: #E94E02 ;border-radius: 6px 6px 6px 6px ;border: none ;color: white ;
+
+}
+.smallbutton{
+	background-color:#E94E02; border-radius:6px 6px 6px 6px; border:none;
+	color:white;
+}
+
+.subbutton{
+	 width:60px; height: 30px ;background-color:#E94E02; border-radius:6px 6px 6px 6px; border:none;
+	color:white;
+}
+.subbuttn{
+	 width:115px; height: 30px ;background-color:#E94E02; border-radius:6px 6px 6px 6px; border:none;
+	color:white;
+}
+
+
+#addorderformtable
+{
+	width: 200px ; height: 32px ;
+}
+#addorderformta
+{
+	width: 50px ; height: 32px ;
+}
+#select
+{
+	width: 200px; height: 30px;
+}

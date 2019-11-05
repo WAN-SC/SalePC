@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper  namespace="com.gwmh.salepc.basedao.EmpDao">
+	<resultMap type="Emp" id="emp">
+		<id column="eid" property="eid"/>
+		<result column="ename" property="ename"/>
+		<result column="epwd" property="epwd"/>
+		<result column="esex" property="esex"/>
+		<result column="eage" property="eage"/>
+		<result column="ejobDate" property="ejobDate"/>
+		<result column="eroleid" property="eroleid"/>
+		<result column="email" property="email"/>
+		<result column="estate" property="estate"/>
+	</resultMap>
+	
+	<resultMap type="AddOrderFormInfo" id="AddOrderFormInfo">
+		<id column="did" property="did"/>
+		<result column="dcommid" property="dcommid"/>
+		<result column="dnumber" property="dnumber"/>
+		<result column="dempid" property="dempid"/>
+		<result column="ddate" property="ddate"/>
+		<result column="dmoney" property="dmoney"/>
+		<result column="dmode" property="dmode"/>
+		<result column="dmessage" property="dmessage"/>
+		<result column="dclientname" property="dclientname"/>
+		<result column="dpcommid" property="dpcommid"/>
+	</resultMap>
+
+	
+
+
+
+	<select id="findCommInfo"  resultType="com.gwmh.salepc.bean.DBCommInfo">
+		select c1 ,c2 ,c3 , c4 , value ,id  from comm where id > 1000
+	</select>
+
+	<select id="findCommName"  parameterType="CommNumber"  resultType="String">
+		select value from comm where c1 = #{ c1 } and c2 = #{ c2 } and c3 = #{ c3 } and c4 = #{ c4 }
+	</select>
+	
+	<select id="getDealCount"  resultType="_int">
+		select count(*) from dealinfo
+	</select>
+	
+	<insert id="addOrderForm"  parameterType="AddOrderFormInfo" >
+		insert into dealinfo values( #{did } , #{dnumber } ,#{dempid } ,#{ ddate}, #{ dmoney},#{ dmode} , #{dmessage } ,#{dclientname } , #{dcommfrom})
+	</insert>
+	
+	<select id="getCommDianMianCount"  parameterType="int" resultType="_int">
+		select STOREINVENTORY from information where id = #{i}
+	</select>
+	
+	<update id="chanageCommDianMianCount"   parameterType="CommIdAndCount"  >
+		update INFORMATION set STOREINVENTORY = #{ count } where id = #{ id }
+	</update>
+	
+	<select id="getCommWaiZuCount"  parameterType="int" resultType="_int">
+		select RENTINVENTORY from information where id = #{i}
+	</select>
+	
+	<update id="chanageCommWaiZuCount"   parameterType="CommIdAndCount"  >
+		update INFORMATION set RENTINVENTORY = #{ count } where id = #{ id }
+	</update>
+	
+	<select id="findAllDealNumber"  resultType="int">
+		select did from dealinfo
+	</select>
+
+	<select id="getWarIdNameType"  resultType="com.gwmh.salepc.bean.WarehouseIdNameType">
+		select wid , wname , wtype from WAREHOUSEANDSUPPLIER
+	</select>
+	
+	<select id="getBackOrderFormCount"  resultType="_int">
+		select count(*) from backorder
+	</select>
+	
+	<insert id="addBackOrderForm"  parameterType="BackOrderForm" >
+		insert into backorder values( #{bid } , #{bdealinfo} ,#{bbackcause} ,#{ bempid }, #{ bclientname },#{ bmassage })
+	</insert>
+
+
+</mapper>
